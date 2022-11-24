@@ -18,7 +18,7 @@ func main() {
 		"Payelh",
 		"Sinchan",
 	}
-	wg.Add(3)
+	wg.Add(len(words))
 	for i, v := range words {
 		go PrintSomething(fmt.Sprintf("%d: %s", i, v), &wg)
 	}
