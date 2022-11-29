@@ -21,7 +21,6 @@ type AssumeRole struct {
 }
 
 func (a *AssumeRole) Connect() error {
-	//Role := os.Getenv("ROLE")
 	a.Sess = session.Must(session.NewSession(&aws.Config{
 		Region: aws.String("us-west-2"),
 	}))
