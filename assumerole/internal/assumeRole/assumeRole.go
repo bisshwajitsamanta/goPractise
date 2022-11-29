@@ -7,6 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
+	"os"
 )
 
 type Service interface {
@@ -20,12 +21,12 @@ type AssumeRole struct {
 }
 
 func (a *AssumeRole) Connect() error {
-
+	//Role := os.Getenv("ROLE")
 	a.Sess = session.Must(session.NewSession(&aws.Config{
 		Region: aws.String("us-west-2"),
 	}))
 
-	a.Creds = stscreds.NewCredentials(a.Sess, "arn:aws:iam::512933419476:role/stsRole")
+	a.Creds = stscreds.NewCredentials(a.Sess, os.Getenv("ROLE"))
 
 	a.Svc = s3.New(a.Sess, &aws.Config{Credentials: a.Creds})
 	fmt.Println(a.Creds.Get())
