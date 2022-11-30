@@ -15,20 +15,26 @@ type Service interface {
 }
 
 type AssumeRole struct {
-	Sess  *session.Session
-	Creds *credentials.Credentials
-	Svc   *s3.S3
+	Sess    *session.Session
+	Creds   *credentials.Credentials
+	Svc     *s3.S3
+	s3Token credentials.Value
 }
 
 func (a *AssumeRole) Connect() error {
+	var err error
 	a.Sess = session.Must(session.NewSession(&aws.Config{
-		Region: aws.String("us-west-2"),
+		Region: aws.String("us-east-1"),
 	}))
 
 	a.Creds = stscreds.NewCredentials(a.Sess, os.Getenv("ROLE"))
 
 	a.Svc = s3.New(a.Sess, &aws.Config{Credentials: a.Creds})
-	fmt.Println(a.Creds.Get())
+	a.s3Token, err = a.Creds.Get()
+	if err != nil {
+		return err
+	}
+	fmt.Println(a.s3Token.SessionToken)
 
 	return nil
 }
